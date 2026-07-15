@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>2M Parameter GPT Optimization Summary</title>
+<style>
+body {
+    font-family: Arial, sans-serif;
+    margin: 40px;
+    line-height: 1.6;
+}
+h1, h2 {
+    color: #222;
+}
+table {
+    border-collapse: collapse;
+    width: 80%;
+}
+td, th {
+    border: 1px solid #999;
+    padding: 8px;
+}
+</style>
+</head>
+
+<body>
+
+<h1>2M Parameter Byte-Level GPT Optimization</h1>
+
+<h2>Objective</h2>
+<p>
+Optimize a small GPT language model under strict constraints:
+maximum 2000 optimizer steps, maximum 2 million parameters,
+CPU-only training, and training only on the provided corpus.
+</p>
+
+<h2>Final Architecture</h2>
+
+<ul>
+<li>Byte-level tokenizer (vocab size: 256)</li>
+<li>Transformer decoder architecture</li>
+<li>SwiGLU feed-forward layers</li>
+<li>Weight tying between embedding and output projection</li>
+<li>AdamW optimizer with warmup and cosine learning rate schedule</li>
+<li>Gradient clipping</li>
+</ul>
+
+<h2>Final Configuration</h2>
+
+<table>
+<tr><th>Parameter</th><th>Value</th></tr>
+<tr><td>Parameters</td><td>2,000,000</td></tr>
+<tr><td>Training steps</td><td>2000</td></tr>
+<tr><td>Vocabulary</td><td>256 bytes</td></tr>
+<tr><td>Block size</td><td>190</td></tr>
+<tr><td>Embedding size</td><td>200</td></tr>
+<tr><td>Layers</td><td>4</td></tr>
+<tr><td>Heads</td><td>6</td></tr>
+</table>
+
+<h2>Experiment Results</h2>
+
+<table>
+<tr><th>Experiment</th><th>BPB</th></tr>
+<tr><td>Baseline</td><td>2.8915</td></tr>
+<tr><td>Optimizer improvements</td><td>2.8610</td></tr>
+<tr><td>SwiGLU architecture</td><td>2.7256</td></tr>
+<tr><td>Final tuned model</td><td>2.6660</td></tr>
+</table>
+
+<h2>Why This Model Performs Better</h2>
+
+<p>
+The main improvement came from replacing the standard MLP block
+with SwiGLU. The gated activation provides better feature learning
+while staying within the parameter budget. Weight tying allowed more
+capacity to be allocated elsewhere in the network. Training changes
+such as AdamW, learning-rate scheduling, and removing excessive
+regularization improved optimization under the limited 2000-step budget.
+</p>
+
+<h2>Human and AI Contribution</h2>
+
+<p>
+AI tools were used for brainstorming possible improvements,
+debugging errors, and explaining architecture choices.
+The final experiment selection, parameter decisions, implementation,
+training runs, and evaluation comparisons were performed manually.
+</p>
+
+</body>
+</html>
